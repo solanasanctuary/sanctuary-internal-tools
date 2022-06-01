@@ -26,11 +26,6 @@ const Home: NextPage = () => {
             <a>Get Candy Machine ID</a>
           </Link>
         </li>
-        <li>
-          <Link href="/get-mint-list">
-            <a>Get Mint List</a>
-          </Link>
-        </li>
       </ul>
     </div>
   );
