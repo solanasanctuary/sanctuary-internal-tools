@@ -3,12 +3,12 @@ import styles from "../styles/Home.module.css";
 export default function SearchCandyMachineID() {
 
   const handleSubmit = async (event: any) => {
+    
     event.preventDefault()
     const data = {
       inputAddress: event.target.inputAddress.value,
     }
     const JSONdata = JSON.stringify(data)
-    console.log(JSONdata)
     const apiEndpoint = 'api/candy-machine-api';
     const options = {
       method: 'POST',
@@ -19,8 +19,15 @@ export default function SearchCandyMachineID() {
     }
     const response = await fetch(apiEndpoint, options);
     const result = await response.json();
-    alert(`The Candy Machine ID of your NFT is ---> ${result.data}`)
     
+    if (response.status == 200) {
+
+      alert(`The Candy Machine ID of your NFT, minted through Candy Machine Program V${result.candyMachineVersion} is ---> 
+      ${result.candyMachineID}`)
+
+    } else {
+      alert(`${result.candyMachineID}`)
+    }
   }
 
   return (
