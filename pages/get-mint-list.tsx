@@ -1,7 +1,4 @@
-import type { NextPage } from "next";
-import Head from "next/head";
 import styles from "../styles/Home.module.css";
-
 import { sliceIntoChunks } from "./slice-into-chunks"
 import { Connection, ParsedInstruction, PublicKey } from "@solana/web3.js";
 import { from } from "rxjs";
@@ -13,12 +10,13 @@ export async function getMints(
   connection: Connection
 ) {
   return new Promise(async (resolve) => {
+    console.log("hello world");
     let all_signatures = [];
     let options = { before: undefined, limit: 1000 };
     let retries = 0;
     while (true) {
       const signatures = await connection.getSignaturesForAddress(
-        new PublicKey("MBMbdocXHzZ8Lj6Wi9dSA5Kz88hzw8XF4Fi66UkN9fP"),
+        new PublicKey(candy_id),
         options
       );
       if (signatures.length == 0) {
@@ -77,27 +75,37 @@ export async function getMints(
   });
 }
 
-const Template: NextPage = () => {
-  console.log("what up!!!");
-  let my_connection = new Connection('https://api.devnet.solana.com');
+export default function GetMintList() {
 
-  getMints("Syx", my_connection);
+  const handleSubmit = async (event: any) => {
+
+    event.preventDefault()
+    let publicKey = event.target.inputAddress.value;
+    let solanaConnection = new Connection('https://api.devnet.solana.com');
+    console.log(publicKey);
+    console.log(solanaConnection);
+    getMints(publicKey, solanaConnection);
+    
+    //TODO test getMints or add new endpoing similar to JL's work
+    //existing key MBMbdocXHzZ8Lj6Wi9dSA5Kz88hzw8XF4Fi66UkN9fP
+
+  }
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Get mint list</title>
-        <meta name="description" content="This page will generate the mint list based on candy machine ID" />
-      </Head>
-
-      <h1>Get Mint List!</h1>
-
-      <div>
-
-      </div>
-
+  <div className={styles.container}>
+    <div className={styles.card}>
+      <main className={styles.main}>
+        <h1 className={styles.title}>
+          Get Mint List
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="inputAddress" ></label>
+          <input type="text" id="inputAddress" name="inputAddress"
+          placeholder="Input the NFT token address" required />
+          <button type="submit">Submit</button>
+      </form>
+      </main>
     </div>
-  );
+  </div>
+);
 };
-
-export default Template;
